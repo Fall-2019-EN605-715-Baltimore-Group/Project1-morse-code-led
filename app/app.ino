@@ -1,10 +1,12 @@
+#define MORSE_LED 13
+
 /*
  * Blink the built-in LED once with an input for wait time in MS
  */
 void blink(unsigned wait) {
-  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+  digitalWrite(MORSE_LED, HIGH);   // turn the LED on (HIGH is the voltage level)
   delay(wait);                       // wait 
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(MORSE_LED, LOW);    // turn the LED off by making the voltage LOW
   delay(200);  
 }
 
@@ -79,10 +81,10 @@ void setup() {
     delay(50);
     
     // initialize the LED Pin for output
-    pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(MORSE_LED, OUTPUT);
 
 
-    while(!Serial) {}
+    while(!Serial) {} 
     
     Serial.println("Setup Complete!");
 }
@@ -118,6 +120,10 @@ void loop() {
   while (input_char != 0x1A) { 
     // Iterate over input string
     for (int char_index = 0; char_index < input_string.length(); char_index++) {
+      // If user input char is sentinal, exit display loop
+      if (input_string.charAt(char_index) == 0x1A) {
+        break;
+      }
       // blink morse code for each character
       char_to_morse(input_string.charAt(char_index));
       input_char = Serial.read();
